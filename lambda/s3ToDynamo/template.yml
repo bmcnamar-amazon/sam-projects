@@ -1,0 +1,34 @@
+AWSTemplateFormatVersion : '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Take S3 object and insert to DynamoDB
+Resources:
+  tickerTable:
+    Type: AWS::Serverless::SimpleTable
+    Properties:
+      TableName: tickers
+      PrimaryKey:
+        Name: id
+        Type: String
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+  s3ToDynamo:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: s3ToDynamo
+      Description: Take S3 object and insert to DynamoDB
+      Handler: index.handler
+      Runtime: python2.7
+      CodeUri: '.'
+      Timeout: 10
+      MemorySize: 256
+      Policies:
+        - AWSLambdaExecute # Managed Policy
+        - DynamoDBCrudPolicy:
+            TableName: !Ref tickerTable
+        - Version: '2012-10-17' # Policy Document
+          Statement:
+            - Effect: Allow
+              Action:
+                - s3:GetObject
+              Resource: 'arn:aws:s3:::asap-input/s3ToDynamo/*'

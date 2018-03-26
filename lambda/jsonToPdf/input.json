@@ -1,0 +1,15 @@
+{
+    "customers": [
+        {
+            "name": "Goldman Sachs",
+            "ticker": "GS",
+            "url": "https://www.google.com/search?q=gs&oq=gs"
+        },
+        {
+            "name": "Amazon",
+            "ticker": "AMZN",
+            "url": "https://www.google.com/search?q=amzn&oq=amzn"
+        }
+    ],
+    "date": "2018-03-26"
+}

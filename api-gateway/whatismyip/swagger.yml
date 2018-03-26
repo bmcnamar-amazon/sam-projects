@@ -1,0 +1,32 @@
+---
+swagger: "2.0"
+info:
+  version: "1.0"
+  title: "whatIsMyIp"
+host: "fqgyssvkvg.execute-api.us-east-1.amazonaws.com"
+basePath: "/Prod"
+schemes:
+- "https"
+paths:
+  /:
+    get:
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "200 response"
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+            responseTemplates:
+              application/json: "{ \"myip\": \"$input.path('$')\" }\n"
+        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:827811673505:function:whatIsMyIp/invocations"
+        passthroughBehavior: "when_no_templates"
+        httpMethod: "POST"
+        requestTemplates:
+          application/json: "{\n  \"myip\": \"$context.identity.sourceIp\"\n}"
+        contentHandling: "CONVERT_TO_TEXT"
+        type: "aws"

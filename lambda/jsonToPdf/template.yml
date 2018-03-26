@@ -1,0 +1,28 @@
+AWSTemplateFormatVersion : '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Take JSON input and return a PDF
+Parameters:
+  ReportBucket:
+    Type: String
+Resources:
+  jsonToPDF:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: jsonToPDF
+      Description: Convert JSON document to PDF report
+      Handler: index.handler
+      Runtime: python2.7
+      CodeUri: '.'
+      Timeout: 10
+      MemorySize: 256
+      Environment:
+        Variables:
+          OUTPUT_BUCKET: !Ref ReportBucket
+      Policies:
+        - AWSLambdaExecute # Managed Policy
+        - Version: '2012-10-17' # Policy Document
+          Statement:
+            - Effect: Allow
+              Action:
+                - s3:PutObject
+              Resource: 'arn:aws:s3:::asap-pdf-output/*'
