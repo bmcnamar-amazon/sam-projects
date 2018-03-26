@@ -8,6 +8,20 @@ This example will deploy a function that will create a PDF based upon a JSON doc
 sam local invoke jsonToPDF -e input.json
 ```
 
+# Create a S3 Bucket to Store Code
+
+Bucket names in AWS S3 must be globally unique.
+
+```
+aws s3 mb s3://<S3 BUCKET NAME>
+```
+
+eg.
+
+```
+aws s3 mb s3://asap_sandbox
+```
+
 # Deploy Function to AWS
 
 ## Package the Function
