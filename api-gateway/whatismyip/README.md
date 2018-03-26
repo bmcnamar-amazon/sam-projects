@@ -40,7 +40,7 @@ eg.
 
 ```
 sam deploy --template-file packaged-template.yml \
---stack-name whatIsMyIp \
+--stack-name whatIsMyIpPartDeux \
 --capabilities CAPABILITY_IAM
 ```
 
@@ -65,6 +65,7 @@ sam package --template-file template.yml \
 ```
 sam deploy --template-file packaged-template.yml \
 --stack-name <YOUR STACK NAME> \
+--region us-east-2 \
 --capabilities CAPABILITY_IAM
 ```
 
