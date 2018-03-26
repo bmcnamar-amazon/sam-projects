@@ -33,7 +33,6 @@ sam package --template-file template.yml \
 ```
 sam deploy --template-file packaged-template.yml \
 --stack-name <YOUR STACK NAME> \
---parameter-overrides ReportBucket=<REPORT BUCKET NAME> \
 --capabilities CAPABILITY_IAM
 ```
 
@@ -42,7 +41,6 @@ eg.
 ```
 sam deploy --template-file packaged-template.yml \
 --stack-name whatIsMyIp \
---parameter-overrides ReportBucket=asap-pdf-output \
 --capabilities CAPABILITY_IAM
 ```
 
@@ -67,7 +65,6 @@ sam package --template-file template.yml \
 ```
 sam deploy --template-file packaged-template.yml \
 --stack-name <YOUR STACK NAME> \
---parameter-overrides ReportBucket=<REPORT BUCKET NAME> \
 --capabilities CAPABILITY_IAM
 ```
 
