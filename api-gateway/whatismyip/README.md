@@ -54,40 +54,6 @@ eg.
 
 ```
 sam deploy --template-file packaged-template.yml \
---stack-name whatIsMyIpPartDeux \
---capabilities CAPABILITY_IAM
-```
-
-# Deploy to an Alternate Region (not us-east-1)
-
-```
-sam package --template-file template.yml \
---output-template-file packaged-template.yml \
---s3-bucket <YOUR S3 BUCKET NOT IN US-EAST-1>
-```
-
-eg.
-
-```
-sam package --template-file template.yml \
---output-template-file packaged-template.yml \
---s3-bucket asap-sandbox-us-east-2
-```
-
-## Deploy Function Using Cloudformation
-
-```
-sam deploy --template-file packaged-template.yml \
---stack-name <YOUR STACK NAME> \
---region us-east-2 \
---capabilities CAPABILITY_IAM
-```
-
-eg.
-
-```
-sam deploy --template-file packaged-template.yml \
 --stack-name whatIsMyIp \
---region us-east-2 \
 --capabilities CAPABILITY_IAM
 ```
