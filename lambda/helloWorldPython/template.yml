@@ -6,6 +6,7 @@ Resources:
   PythonHelloWorldFunction:
     Type: AWS::Serverless::Function
     Properties:
+      FunctionName: helloWorldPython
       Handler: index.handler
       Runtime: python2.7
       CodeUri: '.'
