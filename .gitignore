@@ -1,4 +1,5 @@
 venv
 .vscode
 packaged-*.yml
+outfile.txt
 *.pyc
