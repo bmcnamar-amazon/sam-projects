@@ -4,7 +4,7 @@ This folder will store some self-contained Lambda functions using a number of di
 
 # Directory
 
-* customGreeter: Aler output based upon input to Lambda function in Python
+* customGreeter: Change output based upon input to Lambda function in Python
 * helloWorldPython: Literal hello world in Python
 * helloWorldNode: Literal hello world in Node
 * jsonToPdf: Example to show how JSON data can be used to generate a PDF
