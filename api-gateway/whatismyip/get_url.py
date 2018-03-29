@@ -8,7 +8,7 @@ def usage(msg):
     print '{} <YOUR STACK NAME>'.format(sys.argv[0])
     print 'Error: {}'.format(msg)
     sys.exit(1)
-#
+
 def main():
 
     if len(sys.argv) != 2:
