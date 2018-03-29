@@ -5,7 +5,7 @@ Resources:
   ApiFrontend:
     Type: AWS::Serverless::Api
     Properties:
-      StageName: prod
+      StageName: Prod
       EndpointConfiguration: REGIONAL
       DefinitionBody:
         swagger: "2.0"
@@ -31,7 +31,17 @@ Resources:
                     statusCode: "200"
                     responseTemplates:
                       application/json: "{ \"myip\": \"$input.path('$')\" }\n"
-                uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:827811673505:function:whatIsMyIp/invocations"
+                uri:
+                  Fn::Join:
+                    - ''
+                    - - "arn:aws:apigateway:"
+                      - Ref: AWS::Region
+                      - ":lambda:path/2015-03-31/functions/arn:aws:lambda:"
+                      - Ref: AWS::Region
+                      - ":"
+                      - Ref: AWS::AccountId
+                      - ":function:whatIsMyIp/invocations"
+                # uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:827811673505:function:whatIsMyIp/invocations"
                 passthroughBehavior: "when_no_templates"
                 httpMethod: "POST"
                 requestTemplates:
@@ -58,3 +68,14 @@ Resources:
             Method: get
             RestApiId:
               Ref: ApiFrontend
+Outputs:
+  url:
+    Description: URL to find out your IP address
+    Value:
+      Fn::Join:
+        - ''
+        - - "https://"
+          - Ref: ApiFrontend
+          - ".execute-api."
+          - Ref: AWS::Region
+          - ".amazonaws.com/Prod"
