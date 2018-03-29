@@ -11,10 +11,21 @@ output_bucket = os.environ['OUTPUT_BUCKET']
 bucket_keyspace = 'report'
 
 def handler(event, context):
-    report_date = event['date']
+    input_bucket = event['Records'][0]['s3']['bucket']['name']
+    input_file = event['Records'][0]['s3']['object']['key']
+
+    try:
+        s3.Bucket(input_bucket).download_file(input_file, '/tmp/{}'.format(input_file))
+    except Exception as e:
+        print 'Error: {}'.format(str(e))
+        sys.exit(1)
+
+    data = json.load(open('/tmp/{}'.format(input_file)))
+
+    report_date = data['date']
 
     print 'Report date: {}'.format(report_date)
-    for customer in event['customers']:
+    for customer in data['customers']:
             name = customer['name']
             ticker = customer['ticker']
             link = customer['url']
