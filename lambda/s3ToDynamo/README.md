@@ -2,26 +2,6 @@
 
 This example will deploy a function that will extract data from a S3 object and insert data into a DynamoDB table.
 
-# Run Function Locally Using sam local
-
-```
-sam local invoke s3ToDynamo -e input.json
-```
-
-# Create a S3 Bucket to Store Code
-
-Bucket names in AWS S3 must be globally unique.
-
-```
-aws s3 mb s3://<S3 BUCKET NAME>
-```
-
-eg.
-
-```
-aws s3 mb s3://asap_sandbox
-```
-
 # Deploy Function to AWS
 
 ## Package the Function
@@ -40,21 +20,68 @@ sam package --template-file template.yml \
 --s3-bucket asap_sandbox
 ```
 
-## Deploy Function Using Cloudformation
+## Deploy Function
 
 ```
-aws cloudformation deploy --template-file packaged-template.yml \
+sam deploy --template-file packaged-template.yml \
 --stack-name <YOUR STACK NAME> \
---parameter-overrides ReportBucket=<REPORT BUCKET NAME> \
 --capabilities CAPABILITY_IAM
 ```
 
 eg.
 
 ```
-aws cloudformation deploy --template-file packaged-template.yml \
+sam deploy --template-file packaged-template.yml \
 --stack-name s3ToDynamo \
 --capabilities CAPABILITY_IAM
+```
+
+# Trigger Execution
+
+The function `s3ToDynamo` will be triggered once data is uploaded to the generated bucket.  A wrapper script can be used to upload a properly formatted file to the generated bucket.  
+
+```
+python upload_data.py <YOUR STACK NAME> <YOUR FILE NAME>
+```
+
+eg.
+
+```
+upload_data.py s3ToDynamo sample.json
+```
+
+Once the data is uploaded to S3 there should be corresponding entries in the `stock-prices-s3ToDynamo` DynamoDB table.
+
+# Destroy Stack on AWS
+
+## Clean Up Bucket Contents
+
+In order for Cloudformation to delete the stack the input bucket will first need to be empty.  This can be done by running the following command.
+
+```
+python bucket_cleaner.py <YOUR STACK NAME>
+```
+
+eg.
+
+```
+python bucket_cleaner.py s3ToDynamo
+```
+
+## Delete Cloudformation Stack
+
+Once the generated buckets are empty you can delete the stack using the following command.
+
+```
+aws cloudformation delete-stack \
+--stack-name <YOUR STACK NAME>
+```
+
+eg.
+
+```
+aws cloudformation delete-stack \
+--stack-name s3ToDynamo
 ```
 
 # Additional Notes

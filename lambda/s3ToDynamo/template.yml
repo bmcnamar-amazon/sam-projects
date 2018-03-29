@@ -2,10 +2,12 @@ AWSTemplateFormatVersion : '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: Take S3 object and insert to DynamoDB
 Resources:
-  tickerTable:
+  InputBucket:
+    Type: AWS::S3::Bucket
+  StockPricesTable:
     Type: AWS::Serverless::SimpleTable
     Properties:
-      TableName: tickers
+      TableName: stock-prices-s3ToDynamo
       PrimaryKey:
         Name: id
         Type: String
@@ -22,13 +24,34 @@ Resources:
       CodeUri: '.'
       Timeout: 10
       MemorySize: 256
+      Environment:
+        Variables:
+          DYNAMO_TABLE: stock-prices-s3ToDynamo
       Policies:
         - AWSLambdaExecute # Managed Policy
-        - DynamoDBCrudPolicy:
-            TableName: !Ref tickerTable
         - Version: '2012-10-17' # Policy Document
           Statement:
             - Effect: Allow
               Action:
                 - s3:GetObject
-              Resource: 'arn:aws:s3:::asap-input/s3ToDynamo/*'
+              Resource: 'arn:aws:s3:::*'
+        - Version: '2012-10-17' # Policy Document
+          Statement:
+            - Effect: Allow
+              Action:
+                - dynamodb:putItem
+              Resource:
+                Fn::Join:
+                  - ''
+                  - - "arn:aws:dynamodb:"
+                    - Ref: "AWS::Region"
+                    - ":"
+                    - Ref: "AWS::AccountId"
+                    - ":table/stock-prices-s3ToDynamo"
+
+      Events:
+        ReportUpload:
+          Type: S3
+          Properties:
+            Bucket: !Ref InputBucket
+            Events: s3:ObjectCreated:*

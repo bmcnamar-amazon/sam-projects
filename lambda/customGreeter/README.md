@@ -8,20 +8,6 @@ This example will deploy a very simple Lambda function written in Python that wi
 sam local invoke customGreeter -e event.json
 ```
 
-# Create a S3 Bucket to Store Code
-
-Bucket names in AWS S3 must be globally unique.
-
-```
-aws s3 mb s3://<S3 BUCKET NAME>
-```
-
-eg.
-
-```
-aws s3 mb s3://asap_sandbox
-```
-
 # Deploy Function to AWS
 
 ## Package the Function

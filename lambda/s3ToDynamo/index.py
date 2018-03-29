@@ -1,14 +1,13 @@
 import boto3
 import json
-from pprint import pprint
+import os
 import sys
 import uuid
 
 s3 = boto3.resource('s3')
 dynamodb = boto3.resource('dynamodb')
-table = dynamodb.Table('tickers')
-
-bucket_keyspace = 's3ToDynamo'
+table_name = os.environ['DYNAMO_TABLE']
+table = dynamodb.Table(table_name)
 
 local_directory = '/tmp'
 
@@ -19,7 +18,7 @@ def handler(event, context):
     key = s3_dict['object']['key']
     object_name = key.split('/')[-1]
     local_file = local_directory + '/' + object_name
-    
+
 
     # Copy S3 object locally to /tmp
     print 'Copying s3://{}/{} to {}...'.format(bucket, key, local_file)
@@ -57,8 +56,8 @@ def handler(event, context):
             }
         )
     except Exception as e:
-        print 'ERROR: Failed to insert ticker to tickers DynamoDB table: {}'.format(str(e))
+        print 'ERROR: Failed to insert ticker to {} DynamoDB table: {}'.format(table_name, str(e))
         sys.exit(1)
-    
-    print 'Inserted record to tickers DynamoDB table'
-    return 'SUCCESS: Extracted data from JSON document in s3://{}/{} to ticker DynamoDB table'.format(bucket, key)
+
+    print 'Inserted record to {} DynamoDB table'.format(table_name)
+    return 'SUCCESS: Extracted data from JSON document in s3://{}/{} to {} DynamoDB table'.format(bucket, key, table_name)

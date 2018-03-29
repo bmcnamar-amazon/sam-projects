@@ -8,20 +8,6 @@ This example will create and deploy a Lambda function and API Gateway endpoint t
 sam local invoke whatIsMyIp -e input.json
 ```
 
-# Create a S3 Bucket to Store Code
-
-Bucket names in AWS S3 must be globally unique.
-
-```
-aws s3 mb s3://<S3 BUCKET NAME>
-```
-
-eg.
-
-```
-aws s3 mb s3://asap_sandbox
-```
-
 # Deploy Function to AWS
 
 ## Package the Function to us-east-1
