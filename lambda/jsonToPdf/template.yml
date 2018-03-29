@@ -1,10 +1,11 @@
 AWSTemplateFormatVersion : '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: Take JSON input and return a PDF
-Parameters:
-  ReportBucket:
-    Type: String
 Resources:
+  InputBucket:
+    Type: AWS::S3::Bucket
+  OutputBucket:
+    Type: AWS::S3::Bucket
   jsonToPDF:
     Type: AWS::Serverless::Function
     Properties:
@@ -17,7 +18,7 @@ Resources:
       MemorySize: 256
       Environment:
         Variables:
-          OUTPUT_BUCKET: !Ref ReportBucket
+          OUTPUT_BUCKET: !Ref OutputBucket
       Policies:
         - AWSLambdaExecute # Managed Policy
         - Version: '2012-10-17' # Policy Document
@@ -25,4 +26,15 @@ Resources:
             - Effect: Allow
               Action:
                 - s3:PutObject
-              Resource: 'arn:aws:s3:::asap-pdf-output/*'
+              Resource:
+                Fn::Join:
+                  - ''
+                  - - "arn:aws:s3:::"
+                    - Ref: OutputBucket
+                    - "/*"
+      Events:
+        UploadBucket:
+          Type: S3
+          Properties:
+            Bucket: !Ref InputBucket
+            Events: s3:ObjectCreated:*
