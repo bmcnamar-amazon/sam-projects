@@ -47,7 +47,7 @@ python upload_data.py <YOUR STACK NAME> <YOUR FILE NAME>
 eg.
 
 ```
-upload_data.py jsonToPdf input.json
+python upload_data.py jsonToPdf input.json
 ```
 
 Once the data is uploaded to S3 there should be corresponding PDF reports entries in the output bucket.

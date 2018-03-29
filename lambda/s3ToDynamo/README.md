@@ -47,7 +47,7 @@ python upload_data.py <YOUR STACK NAME> <YOUR FILE NAME>
 eg.
 
 ```
-upload_data.py s3ToDynamo sample.json
+python upload_data.py s3ToDynamo sample.json
 ```
 
 Once the data is uploaded to S3 there should be corresponding entries in the `stock-prices-s3ToDynamo` DynamoDB table.
