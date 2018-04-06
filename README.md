@@ -43,7 +43,7 @@ For instructions on installing specific prerequisites, please refer to the [Prer
 
 ### AWS S3 Bucket
 
-The projects included in this repository will upload code to a S3 bucket.  This bucket will be referenced in directions using the convention <YOUR S3 BUCKET>.  Once the AWS CLI is configured, create your bucket.  Bucket names must be unique so copying and pasting the example using asap_sandbox will fail as the bucket already exists.
+The projects included in this repository will upload code to a S3 bucket.  This bucket will be referenced in directions using the convention `<YOUR S3 BUCKET>`.  Once the AWS CLI is configured, create your bucket.  Bucket names must be unique so copying and pasting the example using asap_sandbox will fail as the bucket already exists.
 
 ```
 aws s3 mb s3://<YOUR S3 BUCKET>
