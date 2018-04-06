@@ -1,19 +1,27 @@
 AWSTemplateFormatVersion : '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: Cause information to be written to DLQ
-Parameters:
-  snsEmailAddress:
-    Type: String
-    Description: Enter a valid email address
 Resources:
   inputBucket:
     Type: AWS::S3::Bucket
+  snsHandlerFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: snsHandler
+      Description: Handle SNS notifications of DLQ entries
+      Handler: sns_handler.handler
+      Runtime: python2.7
+      CodeUri: '.'
+      Timeout: 10
+      MemorySize: 128
+      Policies:
+        - AWSLambdaExecute
   dlqSnsTopic:
     Type: AWS::SNS::Topic
     Properties:
       Subscription:
-      - Endpoint: !Ref snsEmailAddress
-        Protocol: email-json
+      - Endpoint: !GetAtt snsHandlerFunction.Arn
+        Protocol: lambda
   longRunningFunction:
     Type: AWS::Serverless::Function
     Properties:

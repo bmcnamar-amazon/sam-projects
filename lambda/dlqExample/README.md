@@ -4,6 +4,12 @@ This example will deploy a function that will intentionally fail and write data 
 
 DLQ directs unprocessed events to a [Amazon SQS queue](http://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/Welcome.html) or [Amazon SNS topic](http://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/Welcome.html).  The code in this example sends data to a SNS topic.
 
+# Locally Test Function to Parse SNS Notification
+
+```
+sam local invoke snsHandlerFunction -e event.json
+```
+
 # Deploy Function to AWS
 
 ## Package the Function

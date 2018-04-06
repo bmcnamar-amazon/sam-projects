@@ -4,8 +4,6 @@ import time
 
 s3 = boto3.resource('s3')
 
-# output_bucket = os.environ['OUTPUT_BUCKET']
-
 def handler(event, context):
     input_bucket = event['Records'][0]['s3']['bucket']['name']
     input_file = event['Records'][0]['s3']['object']['key']
