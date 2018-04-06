@@ -46,10 +46,6 @@ sam deploy --template-file packaged-template.yml \
 --capabilities CAPABILITY_IAM
 ```
 
-# Confirm SNS Topic Subscription
-
-Go to your email application and open the message from AWS Notifications, and then click the link to confirm your subscription. 
-
 # Trigger Execution
 
 The function `longRunningFunction` will be triggered once data is uploaded to the generated input bucket.  A wrapper script can be used to upload a properly formatted file to the generated bucket.  
