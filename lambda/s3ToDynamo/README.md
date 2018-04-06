@@ -41,13 +41,13 @@ sam deploy --template-file packaged-template.yml \
 The function `s3ToDynamo` will be triggered once data is uploaded to the generated bucket.  A wrapper script can be used to upload a properly formatted file to the generated bucket.  
 
 ```
-python upload_data.py <YOUR STACK NAME> <YOUR FILE NAME>
+python ../../../sam-projects/utilities/upload_data.py <YOUR STACK NAME> <YOUR FILE NAME>
 ```
 
 eg.
 
 ```
-python upload_data.py s3ToDynamo sample.json
+python ../../../sam-projects/utilities/upload_data.py s3ToDynamo sample.json
 ```
 
 Once the data is uploaded to S3 there should be corresponding entries in the `stock-prices-s3ToDynamo` DynamoDB table.
@@ -59,13 +59,13 @@ Once the data is uploaded to S3 there should be corresponding entries in the `st
 In order for Cloudformation to delete the stack the input bucket will first need to be empty.  This can be done by running the following command.
 
 ```
-python bucket_cleaner.py <YOUR STACK NAME>
+python ../../../sam-projects/utilities/bucket_cleaner.py <YOUR STACK NAME>
 ```
 
 eg.
 
 ```
-python bucket_cleaner.py s3ToDynamo
+python ../../../sam-projects/utilities/bucket_cleaner.py s3ToDynamo
 ```
 
 ## Delete Cloudformation Stack

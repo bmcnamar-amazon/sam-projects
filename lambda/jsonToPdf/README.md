@@ -41,13 +41,13 @@ sam deploy --template-file packaged-template.yml \
 The function `jsonToPDF` will be triggered once data is uploaded to the input bucket.  A wrapper script can be used to upload a properly formatted file to the generated bucket.  
 
 ```
-python upload_data.py <YOUR STACK NAME> <YOUR FILE NAME>
+python ../../../sam-projects/utilities/upload_data.py <YOUR STACK NAME> <YOUR FILE NAME>
 ```
 
 eg.
 
 ```
-python upload_data.py jsonToPdf input.json
+python ../../../sam-projects/utilities/upload_data.py jsonToPdf input.json
 ```
 
 Once the data is uploaded to S3 there should be corresponding PDF reports entries in the output bucket.
@@ -59,13 +59,13 @@ Once the data is uploaded to S3 there should be corresponding PDF reports entrie
 In order for Cloudformation to delete the stack the input bucket will first need to be empty.  This can be done by running the following command.
 
 ```
-python bucket_cleaner.py <YOUR STACK NAME>
+python ../../../sam-projects/utilities/bucket_cleaner.py <YOUR STACK NAME>
 ```
 
 eg.
 
 ```
-python bucket_cleaner.py jsonToPdf
+python ../../../sam-projects/utilities/bucket_cleaner.py jsonToPdf
 ```
 
 ## Delete Cloudformation Stack

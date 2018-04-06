@@ -1,0 +1,39 @@
+AWSTemplateFormatVersion : '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Cause information to be written to DLQ
+Parameters:
+  snsEmailAddress:
+    Type: String
+    Description: Enter a valid email address
+Resources:
+  inputBucket:
+    Type: AWS::S3::Bucket
+  dlqSnsTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      Subscription:
+      - Endpoint: !Ref snsEmailAddress
+        Protocol: email-json
+  longRunningFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: longRunner
+      Description: Just sleep and write to a DLQ
+      Handler: index.handler
+      Runtime: python2.7
+      CodeUri: '.'
+      Timeout: 3
+      MemorySize: 256
+      DeadLetterQueue:
+        Type: SNS
+        TargetArn: !Ref dlqSnsTopic
+      Policies:
+        - AWSLambdaExecute # Managed Policy
+        - SNSPublishMessagePolicy:
+            TopicName: !Ref dlqSnsTopic
+      Events:
+        inputBucket:
+          Type: S3
+          Properties:
+            Bucket: !Ref inputBucket
+            Events: s3:ObjectCreated:*

@@ -5,6 +5,7 @@ This folder will store some self-contained Lambda functions using a number of di
 # Directory
 
 * customGreeter: Change output based upon input to Lambda function in Python
+* dlqExample: Demonstrates how Dead Letter Queues can be used with a Lambda function
 * helloWorldPython: Literal hello world in Python
 * helloWorldNode: Literal hello world in Node
 * jsonToPdf: Example to show how JSON data can be used to generate a PDF
