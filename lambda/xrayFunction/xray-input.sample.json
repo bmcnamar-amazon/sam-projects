@@ -1,0 +1,6 @@
+{
+    "valid_bucket_name": "existing-bucket",
+    "valid_key": "existing-key",
+    "nonexistent_bucket": "non-existent-bucket",
+    "nonexistent_key": "non-existent-key"
+}

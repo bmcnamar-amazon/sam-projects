@@ -1,0 +1,23 @@
+AWSTemplateFormatVersion : '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Highlight use of AWS X-Ray
+Resources:
+  xrayFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: xrayFunction
+      Description: Highlight use of AWS X-Ray with Lambda
+      Handler: index.handler
+      Runtime: python2.7
+      CodeUri: '.'
+      MemorySize: 128
+      Tracing: Active
+      Policies:
+        - AWSLambdaExecute # Managed Policy
+        - Version: '2012-10-17' # Policy Document
+          Statement:
+            - Effect: Allow
+              Action:
+                - xray:PutTraceSegments
+                - xray:PutTelemetryRecords
+              Resource: '*'

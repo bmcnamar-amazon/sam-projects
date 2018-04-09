@@ -10,3 +10,4 @@ This folder will store some self-contained Lambda functions using a number of di
 * helloWorldNode: Literal hello world in Node
 * jsonToPdf: Example to show how JSON data can be used to generate a PDF
 * s3ToDynamo: Example to show how JSON data can be extracted from a S3 object and inserted into a DynamoDB table
+* xrayFunction: Example to show how traces can be gathered from functions using the X-Ray service
