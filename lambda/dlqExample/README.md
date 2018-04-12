@@ -42,7 +42,6 @@ eg.
 ```
 sam deploy --template-file packaged-template.yml \
 --stack-name dlqExample \
---parameter-overrides snsEmailAddress=email@domain.com \
 --capabilities CAPABILITY_IAM
 ```
 
