@@ -57,7 +57,21 @@ sam deploy --template-file packaged-template.yml \
 # Trigger Execution
 
 ```
-aws lambda invoke --invocation-type RequestResponse --function-name aliasFunction-DEV --qualifier DEV outfile.txt
+aws lambda invoke \
+--invocation-type RequestResponse \
+--function-name aliasFunction-DEV \
+--qualifier DEV \
+outfile.txt
+```
+
+or
+
+```
+aws lambda invoke \
+--invocation-type RequestResponse \
+--function-name aliasFunction-PROD \
+--qualifier PROD \
+outfile.txt
 ```
 
 # Destroy Stack on AWS
@@ -76,5 +90,12 @@ eg.
 
 ```
 aws cloudformation delete-stack \
---stack-name versionsAndAliases
+--stack-name versionsAndAliases-DEV
+```
+
+or
+
+```
+aws cloudformation delete-stack \
+--stack-name versionsAndAliases-PROD
 ```
