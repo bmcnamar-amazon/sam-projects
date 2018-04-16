@@ -24,3 +24,14 @@ Resources:
       AutoPublishAlias: !Ref Environment
       Policies:
         - AWSLambdaExecute # Managed Policy
+Outputs:
+  aliasFunctionArn:
+    Description: Full ARN of the function
+    Value: 
+      Fn::Join:
+        - ''
+        - - !GetAtt aliasFunction.Arn
+          - ':'
+          - !Ref Environment
+    Export:
+      Name: aliasFunctionArn
