@@ -4,6 +4,7 @@ This folder will store some self-contained Lambda functions using a number of di
 
 # Directory
 
+* complexLookups: Illustrate how lookups inside of Mappings can be used in a SAM template
 * customGreeter: Change output based upon input to Lambda function in Python
 * dlqExample: Demonstrates how Dead Letter Queues can be used with a Lambda function
 * helloWorldPython: Literal hello world in Python

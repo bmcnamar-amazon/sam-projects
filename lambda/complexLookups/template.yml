@@ -1,0 +1,37 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: SAM template for Lambda deploy
+Transform: AWS::Serverless-2016-10-31
+Parameters:
+  StackPrefix:
+    Type: String
+  StackEnvironment:
+    Type: String
+    AllowedValues:
+      - dev
+      - qa
+      - preprod
+      - prod
+Mappings:
+  EnvironmentMap:
+    dev:
+      Url: http://dev-host
+    qa:
+      Url: http://qa-host
+    preprod:
+      Url: http://preprod-host
+    prod:
+      Url: http://prod-host
+Resources:
+  Preprocess:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub "${StackPrefix}-lambdas-Preprocess-${StackEnvironment}"
+      Description: Lambda function for ingestion-service fs_preprocessor API
+      Environment:
+        Variables:
+          URL: !FindInMap [EnvironmentMap, !Ref StackEnvironment, Url]
+      Handler: index.handler
+      CodeUri: "."
+      Runtime: python2.7
+      Policies:
+        - AWSLambdaExecute # Managed Policy
