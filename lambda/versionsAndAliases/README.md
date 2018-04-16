@@ -4,6 +4,8 @@ This example will highlight how function versioning and aliasing can be used.  I
 
 The important takeaway is that the directive `AutoPublishAlias` will automatically increment the deployed version and associate the alias to the new version.
 
+This example also creates an [output and export](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/outputs-section-structure.html) so the function ARN can be referenced from other CloudFormation stacks.
+
 # Run Function Locally Using sam local
 
 ```
