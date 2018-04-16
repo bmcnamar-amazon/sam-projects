@@ -1,0 +1,17 @@
+AWSTemplateFormatVersion : '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Create version and alias for function
+Resources:
+  aliasFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: aliasFunction
+      Description: Create version and alias for function
+      Handler: index.handler
+      Runtime: python2.7
+      CodeUri: '.'
+      Timeout: 3
+      MemorySize: 128
+      AutoPublishAlias: prod
+      Policies:
+        - AWSLambdaExecute # Managed Policy
