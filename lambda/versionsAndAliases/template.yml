@@ -1,17 +1,26 @@
 AWSTemplateFormatVersion : '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: Create version and alias for function
+Parameters:
+  Environment:
+    Type: String
+    AllowedValues:
+      - DEV
+      - QA
+      - STAGING
+      - PROD
+    ConstraintDescription: must be DEV, QA, STAGING, or PROD
 Resources:
   aliasFunction:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: aliasFunction
+      FunctionName: !Sub "aliasFunction-${Environment}"
       Description: Create version and alias for function
       Handler: index.handler
       Runtime: python2.7
       CodeUri: '.'
       Timeout: 3
       MemorySize: 128
-      AutoPublishAlias: prod
+      AutoPublishAlias: !Ref Environment
       Policies:
         - AWSLambdaExecute # Managed Policy

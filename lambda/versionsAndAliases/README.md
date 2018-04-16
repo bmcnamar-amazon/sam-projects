@@ -32,7 +32,7 @@ sam package --template-file template.yml \
 
 ```
 sam deploy --template-file packaged-template.yml \
---stack-name <YOUR STACK NAME> \
+--stack-name <YOUR STACK NAME>-<ENVIRONMENT> \
 --capabilities CAPABILITY_IAM
 ```
 
@@ -40,14 +40,24 @@ eg.
 
 ```
 sam deploy --template-file packaged-template.yml \
---stack-name versionsAndAliases \
+--stack-name versionsAndAliases-DEV \
+--parameter-overrides Environment=DEV \
+--capabilities CAPABILITY_IAM
+```
+
+or 
+
+```
+sam deploy --template-file packaged-template.yml \
+--stack-name versionsAndAliases-PROD \
+--parameter-overrides Environment=PROD \
 --capabilities CAPABILITY_IAM
 ```
 
 # Trigger Execution
 
 ```
-aws lambda invoke --invocation-type RequestResponse --function-name aliasFunction --qualifier prod outfile.txt
+aws lambda invoke --invocation-type RequestResponse --function-name aliasFunction-DEV --qualifier DEV outfile.txt
 ```
 
 # Destroy Stack on AWS
