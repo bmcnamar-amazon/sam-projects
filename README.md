@@ -33,7 +33,7 @@ aws configure
 
 ### Node.js
 
-SAM Local depends upon Node.js and [NPM (Node Package Manager)being installed.  Please download and install the version of Node.js from the [Downloads](https://nodejs.org/en/download/) site that is suitable to your operating system.
+SAM Local depends upon Node.js and NPM (Node Package Manager) being installed.  Please download and install the version of Node.js from the [Downloads](https://nodejs.org/en/download/) site that is suitable to your operating system.
 
 ### SAM and SAM Local
 
