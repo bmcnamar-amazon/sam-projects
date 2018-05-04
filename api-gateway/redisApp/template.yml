@@ -1,0 +1,47 @@
+AWSTemplateFormatVersion : '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Get item from Redis cache
+Parameters:
+  RedisEndpoint:
+    Type: String
+Resources:
+  getFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: Get a resource from cache
+      Handler: index.get
+      Runtime: python2.7
+      CodeUri: '.'
+      Timeout: 10
+      MemorySize: 128
+      Environment:
+        Variables:
+          REDIS_URL: !Ref RedisEndpoint
+      Policies:
+        - AWSLambdaExecute # Managed Policy
+      Events:
+        getResource:
+          Type: Api
+          Properties:
+            Path: /user/{username}
+            Method: get
+  postFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: Get a resource from cache
+      Handler: index.post
+      Runtime: python2.7
+      CodeUri: '.'
+      Timeout: 10
+      MemorySize: 128
+      Environment:
+        Variables:
+          REDIS_URL: !Ref RedisEndpoint
+      Policies:
+        - AWSLambdaExecute # Managed Policy
+      Events:
+        getResource:
+          Type: Api
+          Properties:
+            Path: /user/{username}
+            Method: post
