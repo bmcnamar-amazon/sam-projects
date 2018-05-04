@@ -1,6 +1,6 @@
 # redisApp
 
-The purpose of this example is to illustrate how to do local testing of a REST endpoint with an existing redis container.
+The purpose of this example is to illustrate how to do local testing of a REST endpoint with an existing redis [Docker](https://www.docker.com/) container.
 
 # Run Function Locally Using sam local
 
@@ -55,6 +55,18 @@ eg.
 sam local start-api --docker-network sam-demo
 ```
 
+## Query the Application
+
+Any HTTP client can be used to get a resource.  Here is an example using [Postman](https://www.getpostman.com/).
+
+![GET](img/redisApp-get.png)
+
+## Post Data to the Application
+
+Any HTTP client can be used to create a resource.  Here is an example using [Postman](https://www.getpostman.com/).
+
+![POST](img/redisApp-post.png)
+
 # Deploy Function to AWS
 
-This application is only meant to illustrate how a SAM application can be used to access a docker container.
+This application is only meant to illustrate how a SAM application can be used to access a docker container.  Further work will need to be done to provision an ElastiCache cluster.
