@@ -46,13 +46,13 @@ docker run -it --network sam-demo --link redis-server:redis --rm redis redis-cli
 
 
 ```
-sam local start-api --docker-network <DOCKER NETWORK NAME>
+REDIS_URL="redis-server:6379" sam local start-api --docker-network <DOCKER NETWORK NAME>
 ```
 
 eg.
 
 ```
-sam local start-api --docker-network sam-demo
+REDIS_URL="redis-server:6379" sam local start-api --docker-network sam-demo
 ```
 
 ## Query the Application
