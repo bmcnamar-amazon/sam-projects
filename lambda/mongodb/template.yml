@@ -1,0 +1,79 @@
+AWSTemplateFormatVersion : '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Work with items in MongoDB
+Parameters:
+  SsmConfigName:
+    Type: String
+    Description: 'Enter the keyspace for your SSM data'
+  MongoDatabaseName:
+    Type: String
+    Description: 'MongoDB database with which to interact'
+    Default: 'gamers'
+Resources:
+  InputStream:
+    Type: AWS::Kinesis::Stream
+    Properties:
+      ShardCount: 1 
+  InsertToMongo:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: Put data to a MongoDB database
+      Handler: index.put_data
+      Runtime: python2.7
+      CodeUri: '.'
+      Timeout: 10
+      MemorySize: 128
+      Environment:
+        Variables:
+          SSM_CONFIG_NAME: !Ref SsmConfigName
+          MONGO_DATABASE: !Ref MongoDatabaseName
+      Policies:
+        - AWSLambdaKinesisExecutionRole
+        - Version: '2012-10-17' # Policy Document
+          Statement:
+            - Effect: Allow
+              Action:
+                - 'ssm:GetParameter*'
+              Resource: !Sub 'arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/mdbw2018/*'
+        - Version: '2012-10-17' # Policy Document
+          Statement:
+            - Effect: Allow
+              Action:
+                - 'kms:Decrypt'
+              Resource: !Sub 'arn:aws:kms:${AWS::Region}:${AWS::AccountId}:key/*'
+      Events:
+        Stream:
+          Type: Kinesis
+          Properties:
+            Stream: !GetAtt InputStream.Arn
+            StartingPosition: TRIM_HORIZON
+  QueryFromMongo:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: Get data from a MongoDB database
+      Handler: index.get_data
+      Runtime: python2.7
+      CodeUri: '.'
+      Timeout: 10
+      MemorySize: 128
+      Environment:
+        Variables:
+          SSM_CONFIG_NAME: !Ref SsmConfigName
+          MONGO_DATABASE: !Ref MongoDatabaseName
+      Policies:
+        - Version: '2012-10-17' # Policy Document
+          Statement:
+            - Effect: Allow
+              Action:
+                - 'ssm:GetParameter*'
+              Resource: !Sub 'arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/mdbw2018/*'
+        - Version: '2012-10-17' # Policy Document
+          Statement:
+            - Effect: Allow
+              Action:
+                - 'kms:Decrypt'
+              Resource: !Sub 'arn:aws:kms:${AWS::Region}:${AWS::AccountId}:key/*'
+Outputs:
+  KinesisStreamArn:
+    Description: Name of generated Kinesis Stream
+    Value: !GetAtt InputStream.Arn
