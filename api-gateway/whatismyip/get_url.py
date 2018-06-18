@@ -26,6 +26,7 @@ def main():
         results = cf_client.describe_stacks(StackName=stack_name)
     except Exception as e:
         print 'Error: Could not describe stacks for {}: {}'.format(stack_name, str(e))
+        sys.exit(1)
 
     print results['Stacks'][0]['Outputs'][0]['OutputValue']
 
