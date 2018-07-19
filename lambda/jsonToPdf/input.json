@@ -1,15 +1,30 @@
 {
     "customers": [
         {
-            "name": "Goldman Sachs",
-            "ticker": "GS",
-            "url": "https://www.google.com/search?q=gs&oq=gs"
+            "name": "Facebook",
+            "ticker": "FB",
+            "url": "https://www.google.com/search?q=fb&oq=fb"
         },
         {
             "name": "Amazon",
             "ticker": "AMZN",
             "url": "https://www.google.com/search?q=amzn&oq=amzn"
+        },
+        {
+            "name": "Apple",
+            "ticker": "AAPL",
+            "url": "https://www.google.com/search?q=aapl&oq=aapl"
+        },
+        {
+            "name": "Netflix",
+            "ticker": "NFLX",
+            "url": "https://www.google.com/search?q=nflx&oq=nflx"
+        },
+        {
+            "name": "Google",
+            "ticker": "GOOGL",
+            "url": "https://www.google.com/search?q=googl&oq=googl"
         }
     ],
-    "date": "2018-03-26"
+    "date": "2018-06-17"
 }
