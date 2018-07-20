@@ -1,0 +1,78 @@
+AWSTemplateFormatVersion : '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: API Gateway Authorizer Validator
+Parameters:
+  LambdaAuthorizerArn:
+    Type: String
+    Description: 'Enter the ARN of your Lambda authorizer'
+  RateExpression:
+    Type: String
+    Description: 'Specify how frequently the authorizer validation should run'
+    Default: 'rate(1 minute)'
+Resources:
+  ValidatorFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: Validate API Gateway Authorizer settings
+      Handler: index.handler
+      Runtime: python2.7
+      CodeUri: '.'
+      Timeout: 30
+      MemorySize: 128
+      Environment:
+        Variables:
+          LAMBDA_AUTHORIZER_ARN: !Ref LambdaAuthorizerArn
+      Policies:
+        - Version: '2012-10-17' # Policy Document
+          Statement:
+            - Effect: Deny
+              Action:
+                - 'apigateway:POST'
+                - 'apigateway:PUT'
+                - 'apigateway:PATCH'
+                - 'apigateway:DELETE'
+              Resource:
+                - !Sub 'arn:aws:apigateway:${AWS::Region}::/*'
+            - Effect: Deny
+              Action:
+                - 'apigateway:GET'
+                - 'apigateway:HEAD'
+                - 'apigateway:OPTIONS'
+              Resource:
+                - !Sub 'arn:aws:apigateway:${AWS::Region}::/'
+                - !Sub 'arn:aws:apigateway:${AWS::Region}::/account'
+                - !Sub 'arn:aws:apigateway:${AWS::Region}::/clientcertificates'
+                - !Sub 'arn:aws:apigateway:${AWS::Region}::/domainnames'
+                - !Sub 'arn:aws:apigateway:${AWS::Region}::/apikeys'
+            - Effect: Allow
+              Action:
+                - 'apigateway:GET'
+                - 'apigateway:HEAD'
+                - 'apigateway:OPTIONS'
+              Resource:
+                - !Sub 'arn:aws:apigateway:${AWS::Region}::/restapis'
+            - Effect: Allow
+              Action:
+                - 'apigateway:GET'
+                - 'apigateway:HEAD'
+                - 'apigateway:OPTIONS'
+                - 'apigateway:GetExport'
+              Resource:
+                - !Sub 'arn:aws:apigateway:${AWS::Region}::/restapis/*/stages'
+                - !Sub 'arn:aws:apigateway:${AWS::Region}::/restapis/*/stages/*'
+  ScheduledRule:
+    Type: AWS::Events::Rule
+    Properties:
+      Description: Schedule to check on API Gateway authorizers
+      ScheduleExpression: !Ref RateExpression
+      State: ENABLED
+      Targets: 
+        - Arn: !GetAtt ValidatorFunction.Arn
+          Id: ValidateFunction
+  PermissionToInvokeValidatorFunction:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref ValidatorFunction
+      Action: 'lambda:InvokeFunction'
+      Principal: 'events.amazonaws.com'
+      SourceArn: !GetAtt ScheduledRule.Arn
