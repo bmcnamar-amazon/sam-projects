@@ -40,22 +40,6 @@ sam deploy --template-file packaged-template.yml \
 --capabilities CAPABILITY_IAM
 ```
 
-# Visit the API Endpoint
-
-Run the following command to return the URL of the generated resource.
-
-```
-python get_url.py <YOUR STACK NAME>
-```
-
-eg.
-
-```
-python get_url.py whatIsMyIp
-```
-
-Once you have the URL you can use command line tools like curl or GUIs like Postman to retrieve results.
-
 # Destroy Stack on AWS
 
 ## Delete Cloudformation Stack
@@ -71,5 +55,5 @@ eg.
 
 ```
 aws cloudformation delete-stack \
---stack-name whatIsMyIp
+--stack-name enforceConfiguration
 ```
