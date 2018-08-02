@@ -1,4 +1,5 @@
 import boto3
+import datetime
 import json
 import os
 from reportlab.lib.pagesizes import letter
@@ -26,6 +27,9 @@ def handler(event, context):
 
     report_date = data['date']
 
+    now = datetime.datetime.now()
+    string_now = datetime.datetime.strftime(now, '%m-%d-%Y')
+
     print 'Report date: {}'.format(report_date)
     for customer in data['customers']:
             name = customer['name']
@@ -39,8 +43,9 @@ def handler(event, context):
 
             try:
                 report_directory = '/tmp'
-                report_name = '{}.pdf'.format(customer['name'].replace(' ','_'))
+                report_name = '{}-{}.pdf'.format(customer['name'].replace(' ','_'), string_now)
                 full_report = report_directory + '/' + report_name
+
                 print 'Creating report {}'.format(report_name)
 
                 logo = ImageReader(image_url)
