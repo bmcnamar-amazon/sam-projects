@@ -4,7 +4,7 @@ This example will deploy a very simple Lambda function that will utilize data st
 
 # Pre-requisite
 
-There are two dependencies in this example:
+There are two dependencies in this example that surround IAM and Secrets Manager.
 
 ## IAM
 
@@ -33,7 +33,7 @@ Secrets Manager should have a secret stored in the key `prod/myapp/password` whe
 
 # Deploy Function to AWS
 
-Once the pre-requisites are met the function can be deployed.
+Once the pre-requisites are met the function can be deployed.  The deployment step uses a SAM parameter named *SecretKey* to pass along the secret to decrypt.  In our example, the *SecretKey* is `prod/myapp/password`.
 
 ## Package the Function
 
