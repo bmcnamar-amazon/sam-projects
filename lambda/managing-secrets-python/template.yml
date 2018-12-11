@@ -1,0 +1,19 @@
+AWSTemplateFormatVersion : '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: A simple application using AWS Secrets Manager
+
+Parameters:
+  SecretKey:
+    Type: String
+
+Resources:
+  UseSecrets:
+      Type: AWS::Serverless::Function
+      Properties:
+        CodeUri: code/
+        Handler: index.handler
+        Runtime: python3.6
+        Role: !Sub "arn:aws:iam::${AWS::AccountId}:role/secrets-manager-example"
+        Environment:
+          Variables:
+            SECRET_KEY: !Ref SecretKey
