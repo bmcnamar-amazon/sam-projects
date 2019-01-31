@@ -1,0 +1,187 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Cost management Step Functions example
+
+# Parameters:
+#     AccountIds:
+#         Default: 1234567890
+#         Type: String
+#         Description: Account(s) to report upon
+
+######   ##        #######  ########     ###    ##        ######  
+##    ##  ##       ##     ## ##     ##   ## ##   ##       ##    ## 
+##        ##       ##     ## ##     ##  ##   ##  ##       ##       
+##   #### ##       ##     ## ########  ##     ## ##        ######  
+##    ##  ##       ##     ## ##     ## ######### ##             ## 
+##    ##  ##       ##     ## ##     ## ##     ## ##       ##    ## 
+ ######   ########  #######  ########  ##     ## ########  ######  
+
+Globals:
+    Function:
+        Runtime: python2.7
+        Timeout: 30
+        Tracing: Active
+        # Environment:
+        #   Variables:
+        #     TABLE_NAME: !Ref IncidentsTable
+        Tags:
+          Project: cost_management
+
+Resources:
+
+####    ###    ##     ## 
+ ##    ## ##   ###   ### 
+ ##   ##   ##  #### #### 
+ ##  ##     ## ## ### ## 
+ ##  ######### ##     ## 
+ ##  ##     ## ##     ## 
+#### ##     ## ##     ## 
+
+    CostExplorerRole:
+        Type: 'AWS::IAM::Role'
+        Properties:
+            Path: !Join ["", ["/", !Ref "AWS::StackName", "/"]]
+            ManagedPolicyArns:
+                - 'arn:aws:iam::aws:policy/AWSXrayWriteOnlyAccess'
+                - 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
+            AssumeRolePolicyDocument:
+                Version: '2012-10-17'
+                Statement:
+                    - Sid: 'AllowLambdaServiceToAssumeRole'
+                      Effect: 'Allow'
+                      Action: 
+                          - 'sts:AssumeRole'
+                      Principal:
+                          Service:
+                              - 'lambda.amazonaws.com'
+            Policies:
+                - PolicyName: 'CostExplorer'
+                  PolicyDocument:
+                    Version: '2012-10-17' # Policy Document
+                    Statement:
+                      - Effect: Allow
+                        Action:
+                          - 'ce:*'
+                        Resource: '*'
+  
+    StepFunctionsServiceRole:
+        Type: "AWS::IAM::Role"
+        Properties:
+            Path: !Join ["", ["/", !Ref "AWS::StackName", "/"]]
+            # Path: '/'
+            ManagedPolicyArns:
+                - "arn:aws:iam::aws:policy/AWSStepFunctionsFullAccess"
+            AssumeRolePolicyDocument:
+                Version: "2012-10-17"
+                Statement:
+                    -
+                        Sid: "AllowStepFunctionsServiceToAssumeRole"
+                        Effect: "Allow"
+                        Action: 
+                            - "sts:AssumeRole"
+                        Principal:
+                            Service:
+                                - !Sub "states.${AWS::Region}.amazonaws.com"
+            Policies:
+                -   PolicyName: "CallLambdaFunctions"
+                    PolicyDocument:
+                        Version: '2012-10-17'
+                        Statement:
+                            -   Effect: "Allow"
+                                Action:
+                                    - "lambda:InvokeFunction"
+                                Resource: 
+                                    - !Sub ${ReservationRecommendationsFunction.Arn}
+                                    - !Sub ${ReservationCoverageFunction.Arn}
+                                    - !Sub ${CostAndUsageFunction.Arn}
+
+##          ###    ##     ## ########  ########     ###    
+##         ## ##   ###   ### ##     ## ##     ##   ## ##   
+##        ##   ##  #### #### ##     ## ##     ##  ##   ##  
+##       ##     ## ## ### ## ########  ##     ## ##     ## 
+##       ######### ##     ## ##     ## ##     ## ######### 
+##       ##     ## ##     ## ##     ## ##     ## ##     ## 
+######## ##     ## ##     ## ########  ########  ##     ##
+
+    ReservationRecommendationsFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+            Description: Return resource reservation recommendations
+            CodeUri: ./reservation_recommendations/
+            Handler: index.handler
+            Role: !Sub ${CostExplorerRole.Arn}
+    
+    ReservationCoverageFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+            Description: Return resource reservation coverage
+            CodeUri: ./reservation_coverage/
+            Handler: index.handler
+            Role: !Sub ${CostExplorerRole.Arn}
+    
+    CostAndUsageFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+            Description: Return cost and usage information
+            CodeUri: ./cost_and_usage/
+            Handler: index.handler
+            Role: !Sub ${CostExplorerRole.Arn}
+
+
+ ######  ######## ######## ########     ######## ##     ## ##    ##  ######  ######## ####  #######  ##    ## 
+##    ##    ##    ##       ##     ##    ##       ##     ## ###   ## ##    ##    ##     ##  ##     ## ###   ## 
+##          ##    ##       ##     ##    ##       ##     ## ####  ## ##          ##     ##  ##     ## ####  ## 
+ ######     ##    ######   ########     ######   ##     ## ## ## ## ##          ##     ##  ##     ## ## ## ## 
+      ##    ##    ##       ##           ##       ##     ## ##  #### ##          ##     ##  ##     ## ##  #### 
+##    ##    ##    ##       ##           ##       ##     ## ##   ### ##    ##    ##     ##  ##     ## ##   ### 
+ ######     ##    ######## ##           ##        #######  ##    ##  ######     ##    ####  #######  ##    ##  
+
+    CostManagementStateMachine:
+        Type: "AWS::StepFunctions::StateMachine"
+        Properties:
+            StateMachineName: CostManagement
+            RoleArn: !GetAtt StepFunctionsServiceRole.Arn
+            DefinitionString: !Sub |-
+                {
+                  "Comment": "Cost Management with Step Functions",
+                  "StartAt": "CostManagementInfo",
+                  "States": {
+                    "CostManagementInfo": {
+                      "Type": "Parallel",
+                      "End": true,
+                      "Branches": [
+                        {
+                          "StartAt": "ReservationRecommendations",
+                          "States": {
+                            "ReservationRecommendations": {
+                              "Type": "Task",
+                              "Resource": "${ReservationRecommendationsFunction.Arn}",
+                              "End": true
+                            }
+                          }
+                        },
+                        {
+                          "StartAt": "CostAndUsage",
+                          "States": {
+                            "CostAndUsage": {
+                              "Type": "Task",
+                              "Resource": "${CostAndUsageFunction.Arn}",
+                              "End": true
+                            }
+                          }
+                        },
+                        {
+                            "StartAt": "ReservationCoverage",
+                            "States": {
+                            "ReservationCoverage": {
+                              "Type": "Task",
+                              "Resource": "${ReservationCoverageFunction.Arn}",
+                              "End": true
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+

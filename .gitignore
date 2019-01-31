@@ -4,3 +4,4 @@ packaged-*.yml
 outfile.txt
 *.pyc
 xray-input.json
+*.DS_Store
