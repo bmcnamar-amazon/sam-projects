@@ -1,0 +1,67 @@
+AWSTemplateFormatVersion : '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Publish Items from Kinesis to DynamoDB
+Resources:
+  InputStream:
+    Type: AWS::Kinesis::Stream
+    Properties:
+      ShardCount: 1
+  ScoresBucket:
+    Type: AWS::S3::Bucket
+  ScoresTable:
+    Type: AWS::Serverless::SimpleTable
+    PrimaryKey:
+      Name: id
+      Type: String
+  DynamoWriter:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: Put data to a DynamoDB table
+      Handler: dynamo.handler
+      Runtime: python2.7
+      CodeUri: 'code/'
+      Timeout: 10
+      MemorySize: 128
+      Policies:
+        - AWSLambdaKinesisExecutionRole
+        - DynamoDBCrudPolicy:
+            TableName: !Ref ScoresTable
+      Environment:
+        Variables:
+          SCORES_TABLE: !Ref ScoresTable
+      Events:
+        Stream:
+          Type: Kinesis
+          Properties:
+            Stream: !GetAtt InputStream.Arn
+            StartingPosition: TRIM_HORIZON
+  S3Writer:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: Put a record to a S3 bucket
+      Handler: s3.handler
+      Runtime: python2.7
+      CodeUri: 'code/'
+      Timeout: 10
+      MemorySize: 128
+      Policies:
+        - Version: '2012-10-17' # Policy Document
+          Statement:
+            - Effect: Allow
+              Action:
+                - s3:PutObject
+              Resource:
+                Fn::Join:
+                  - ''
+                  - - "arn:aws:s3:::"
+                    - Ref: ScoresBucket
+                    - "/*" 
+      Environment:
+        Variables:
+          SCORES_BUCKET: !Ref ScoresBucket
+      Events:
+        Stream:
+          Type: Kinesis
+          Properties:
+            Stream: !GetAtt InputStream.Arn
+            StartingPosition: TRIM_HORIZON

@@ -1,0 +1,12 @@
+{
+    "fileLocations": [
+        {
+            "URIPrefixes": [
+                "s3://kinesisconsumer-scoresbucket-1tlem6e7n4uqz/"
+            ]
+        }
+    ],
+    "globalUploadSettings": {
+        "format": "JSON"
+    }
+}
