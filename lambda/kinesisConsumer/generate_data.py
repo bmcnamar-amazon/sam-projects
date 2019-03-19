@@ -49,7 +49,7 @@ while True:
     lastname = random.choice(last_names)
     score = int(random.random() * 100)
     ip_address = random.choice(ip_addresses)
-    timestamp = datetime.utcnow().isoformat()
+    timestamp = datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')
 
     result = put_to_stream(firstname, lastname, score, ip_address, timestamp)
     print result
