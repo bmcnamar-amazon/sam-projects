@@ -26,7 +26,7 @@ configparser==3.5.0
 cookiecutter==1.6.0
 cookies==2.2.1
 coverage==4.0.3
-cryptography==2.3
+cryptography==3.2
 dateparser==0.7.0
 decorator==4.3.0
 dnslib==0.9.7
