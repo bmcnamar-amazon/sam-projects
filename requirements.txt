@@ -41,7 +41,7 @@ envs==1.2.4
 flake8==3.5.0
 flake8-quotes==1.0.0
 Flask==1.0.2
-Flask-Cors==3.0.3
+Flask-Cors==3.0.9
 flask-swagger==0.2.12
 funcsigs==1.0.2
 functools32==3.2.3.post2
