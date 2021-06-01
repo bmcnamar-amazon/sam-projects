@@ -99,7 +99,7 @@ six==1.11.0
 srp-ext==1.0.7.1
 subprocess32-ext==3.2.8.2
 tzlocal==1.5.1
-urllib3==1.24.1
+urllib3==1.26.5
 warrant-ext==0.6.1.1
 websocket-client==0.47.0
 Werkzeug==0.14.1
