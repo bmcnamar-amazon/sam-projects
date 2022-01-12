@@ -29,7 +29,7 @@ coverage==4.0.3
 cryptography==2.3
 dateparser==0.7.0
 decorator==4.3.0
-dnslib==0.9.7
+dnslib==0.9.17
 dnspython==1.15.0
 docker==3.3.0
 docker-pycreds==0.2.3
