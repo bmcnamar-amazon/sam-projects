@@ -1,5 +1,5 @@
 airspeed==0.5.5.dev20160812
-arrow==0.12.1
+arrow==0.15.1
 asn1crypto==0.24.0
 astroid==1.6.5
 aws-lambda-builders==0.0.3
